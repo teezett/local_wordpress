@@ -1,0 +1,5 @@
+# Wordpress - ignore core, configuration, examples, uploads and logs.
+
+*
+!.gitkeep
+!.gitignore
