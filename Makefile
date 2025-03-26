@@ -1,6 +1,8 @@
 DC_BINARY = docker compose
 #DC_FILE = docker-compose.${DEPLOY_STAGE}.yml
 DC = ${DC_BINARY} -f docker-compose.yml
+BACKUP_DIR = db-backups
+DB_FILE = tmp/LincolnSiedlung-db.sql
 
 help:
 	@echo "# Local wordpress instance"
@@ -18,5 +20,16 @@ logs: ## Show logs of all containers (stop with ctrl-c)
 up:	## start all containers
 	${DC} up -d --wait
 
+db-up:	# start db container
+	${DC} up -d --wait db
+.PHONY: db-up
+
 down: ## stop and remove containers
 	${DC} down --remove-orphans
+
+restore-db:  db-up  ## restore db with name ${BACKUP_DB_FILE}
+	test -n "${BACKUP_DB_FILE}"  # check if variable BACKUP_DB_FILE is set
+	test -r "./${BACKUP_DIR}/${BACKUP_DB_FILE}"
+	cp ./${BACKUP_DIR}/${BACKUP_DB_FILE} ${DB_FILE}
+	sed -i -e 's/https:\/\/www.lincoln-darmstadt.de/http:\/\/localhost:8080/g' ${DB_FILE}
+	sed -i -e 's/lincoln-darmstadt/localhost:8080/g' ${DB_FILE}
