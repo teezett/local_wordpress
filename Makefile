@@ -1,3 +1,4 @@
+export LC_ALL=C
 DC_BINARY = docker compose
 #DC_FILE = docker-compose.${DEPLOY_STAGE}.yml
 DC = ${DC_BINARY} -f docker-compose.yml
@@ -27,9 +28,12 @@ db-up:	# start db container
 down: ## stop and remove containers
 	${DC} down --remove-orphans
 
-restore-db:  db-up  ## restore db with name ${BACKUP_DB_FILE}
+restore-db: db-up ## restore db with name ${BACKUP_DB_FILE}
 	test -n "${BACKUP_DB_FILE}"  # check if variable BACKUP_DB_FILE is set
 	test -r "./${BACKUP_DIR}/${BACKUP_DB_FILE}"
 	cp ./${BACKUP_DIR}/${BACKUP_DB_FILE} ${DB_FILE}
-	sed -i -e 's/https:\/\/www.lincoln-darmstadt.de/http:\/\/localhost:8080/g' ${DB_FILE}
+	sed -i -e 's@https://www.lincoln-darmstadt.de@http://localhost:8080@g' ${DB_FILE}
 	sed -i -e 's/lincoln-darmstadt/localhost:8080/g' ${DB_FILE}
+	. ./.db.env && mysql -h 127.0.0.1 -P 3306 -u $$DB_USER -p$$DB_PASS $$DB_NAME < ${DB_FILE}
+.PHONY: restore-db
+
