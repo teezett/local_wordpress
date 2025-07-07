@@ -15,6 +15,10 @@ Local wordpress server from docker and backup files
 
 ## Preparation of data
 
+### Configuration
+
+Copy the `.db.template.env`template to `.db.env` and set the appropriate credentials.
+
 ### Folder structure
 
 Copy the external files to `wp-content-backup`.
