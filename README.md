@@ -18,15 +18,14 @@ Ein MySQL-Client auf dem Host ist **nicht** nötig.
    im Kopf des Dumps. `.db.env` ist nicht im Git.
 2. UpdraftPlus-Sicherung nach `db-backups/` legen (alle Dateien einer Sicherung:
    `backup_<Datum>_…-db[.gz]`, `-plugins.zip`, `-themes.zip`, `-uploads.zip`, `-others.zip`).
-   `make fetch-backups` holt die Sicherung automatisch (Einstellungen in `.db.env`). Da UpdraftPlus
-   Datenbank und Dateien oft in verschiedenen Rhythmen sichert (z. B. DB täglich, Dateien wöchentlich),
-   wird **pro Teil** (db, plugins, themes, uploads, others) die neueste Sicherung geholt, die diesen Teil
-   enthält. Datenbank und Dateien können dadurch bis zu einem Intervall auseinanderliegen; für einen
-   konsistenten Stand `STAMP=<Zeitstempel der Voll-Sicherung>` angeben.
+   `make fetch-backups` holt die Sicherung automatisch (Einstellungen in `.db.env`).
+   Da UpdraftPlus Datenbank und Dateien oft in verschiedenen Rhythmen sichert (z. B. DB täglich, Dateien wöchentlich), wird **pro Teil** (db, plugins, themes, uploads, others) die neueste Sicherung geholt, die diesen Teil enthält.
+   Datenbank und Dateien können dadurch bis zu einem Intervall auseinanderliegen;
+   für einen konsistenten Stand `STAMP=<Zeitstempel der Voll-Sicherung>` angeben.
    - **Webspace per SSH:** `UPDRAFT_METHOD=rsync`, `UPDRAFT_REMOTE=user@host:/pfad/zu/wp-content/updraft/`
      (SSH-Key/Login muss funktionieren).
    - **Google Drive:** `UPDRAFT_METHOD=rclone`, `UPDRAFT_REMOTE=gdrive:UpdraftPlus`. Einmalig
-     `brew install rclone` und `rclone config` (neuer Remote `gdrive`, Typ `drive`, Browser-Login).
+     `brew install rclone` und `rclone config` (neuer Remote `<gdrive>`, Typ `drive`, Browser-Login).
    - Andere Ziele (Dropbox, S3 …): mit rclone genauso möglich, oder Dateien von Hand nach `db-backups/` legen.
 3. `make restore-all` entpackt die Dateien nach `wp-content/` und spielt die DB ein
    (einzeln: `make restore-files`, `make restore-db`; bestimmte Sicherung: `STAMP=2025-07-02-2339`).
