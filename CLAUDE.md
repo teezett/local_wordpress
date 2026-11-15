@@ -51,6 +51,14 @@ Seite: http://localhost:8080 · Mails: http://localhost:8025 (Ports pro Seite in
 - **UpdraftPlus-Zips** enthalten ihren Ordner (`plugins/…`, `themes/…`, `uploads/…`) schon selbst; direkt nach `wp-content` entpacken.
 - `sed -i` ist auf macOS anders als auf Linux (`sed -i ''`); im Makefile wird kein `sed -i` mehr benutzt.
 
+## Offene Aufgaben
+
+- [ ] **rclone: eigene Google-Client-ID anlegen** (geteilte ID läuft 2026 aus, `fetch-backups` bricht dann ab).
+  Anleitung: Google Cloud Console → Projekt → Drive API aktivieren → OAuth-Zustimmungsbildschirm (Extern, Scope
+  `drive.readonly`, **in Produktion veröffentlichen**, sonst läuft der Token nach 7 Tagen ab) → OAuth-Client "Desktop-App"
+  → `rclone config update lincoln-backup client_id=… client_secret=…` → `rclone config reconnect lincoln-backup:`.
+  **Zu Beginn jeder Sitzung den Nutzer daran erinnern, solange der Punkt offen ist.**
+
 ## Konventionen
 
 - Kleine, thematisch getrennte Commits, deutsche Messages.
