@@ -1,4 +1,4 @@
-# Wordpress - ignore core, configuration, examples, uploads and logs.
+# Dumps nicht ins Git
 
 *
 !.gitkeep
