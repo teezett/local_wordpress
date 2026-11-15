@@ -1,5 +1,5 @@
 #!/bin/sh
-# Entpackt die Datei-Backups von UpdraftPlus (plugins/themes/uploads/others) nach wp-content/.
+# Entpackt die Datei-Backups von UpdraftPlus (plugins/themes/uploads, aus others nur languages) nach wp-content/.
 #
 # UpdraftPlus legt pro Sicherung Dateien an wie
 #   backup_2025-07-02-2339_Site_652f38cc34d2-{db,plugins,themes,uploads,others}.zip
@@ -28,14 +28,18 @@ for kind in plugins themes uploads others; do
   fi
   if [ -z "$stamp" ]; then echo "==> $kind: keine Sicherung in $BACKUP_DIR"; continue; fi
   echo "==> $kind: Sicherung $stamp"
-  if [ "$kind" = others ]; then dest=$TARGET_DIR; else dest=$TARGET_DIR/$kind; fi
   for zip in "$BACKUP_DIR"/backup_"$stamp"_*-"$kind".zip "$BACKUP_DIR"/backup_"$stamp"_*-"$kind"[0-9]*.zip; do
     [ -f "$zip" ] || continue
     found=1
-    mkdir -p "$dest"
-    echo "    $(basename "$zip") -> $dest/"
-    # Hinweis: wp-content/mu-plugins aus "others" wird nicht gemountet (Staging nutzt staging/mu-plugins)
-    unzip -oq "$zip" -d "$dest"
+    mkdir -p "$TARGET_DIR"
+    echo "    $(basename "$zip") -> $TARGET_DIR/"
+    # Die Archive enthalten ihren Ordner selbst (plugins/, themes/, uploads/) relativ zu wp-content.
+    # "others" enthaelt zusaetzlich Cache-Reste und -old-Ordner; davon wird nur languages/ gebraucht.
+    if [ "$kind" = others ]; then
+      unzip -oq "$zip" 'languages/*' -d "$TARGET_DIR" || true
+    else
+      unzip -oq "$zip" -d "$TARGET_DIR"
+    fi
   done
 done
 
