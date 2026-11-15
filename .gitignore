@@ -3,6 +3,11 @@
 
 # local configuration
 .db.env
+.db.*.env
+!.db.template.env
+
+# Daten weiterer Seiten (make SITE=...)
+/sites/
 
 # Core
 #
